@@ -20,30 +20,22 @@ mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t sensor) {
 
 mgos_bbutton_t mgos_bbutton_create(const char *id, enum mgos_bthing_pub_state_mode pub_state_mode) {
   if (pub_state_mode != MGOS_BTHING_PUB_STATE_MODE_CHANGED) {
-    // initialize the polling global timer
-    if (s_bbutton_poll_timer_id == MGOS_INVALID_TIMER_ID) {
-      s_bbutton_poll_timer_id = mgos_set_timer(10, MGOS_TIMER_REPEAT, mg_bbutton_poll_cb, NULL);
-    }
-    if (s_bbutton_poll_timer_id != MGOS_INVALID_TIMER_ID) {
-      mgos_bbutton_t MG_BBUTTON_NEW(btn);
-      if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE, pub_state_mode)) {
-        struct mg_bbutton_cfg *cfg = calloc(1, sizeof(struct mg_bbutton_cfg));
-        if (cfg) {
-          if (mg_bbutton_init(btn, cfg)) {
-            
-            LOG(LL_INFO, ("bButton '%s' successfully created.", id));
-            return btn;
-          }
-          mg_bthing_reset(MG_BTHING_SENS_CAST3(btn));
-        } else {
-          LOG(LL_ERROR, ("Unable to allocate memory for 'mg_bbutton_cfg.'"));
+    mgos_bbutton_t MG_BBUTTON_NEW(btn);
+    if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE, pub_state_mode)) {
+      struct mg_bbutton_cfg *cfg = calloc(1, sizeof(struct mg_bbutton_cfg));
+      if (cfg) {
+        if (mg_bbutton_init(btn, cfg)) {
+          
+          LOG(LL_INFO, ("bButton '%s' successfully created.", id));
+          return btn;
         }
-        free(cfg);
+        mg_bthing_reset(MG_BTHING_SENS_CAST3(btn));
+      } else {
+        LOG(LL_ERROR, ("Unable to allocate memory for 'mg_bbutton_cfg.'"));
       }
-      free(btn);
-    } else {
-      LOG(LL_ERROR, ("Unable to start the internal polling timer for bButtons.'"));
+      free(cfg);
     }
+    free(btn);
   } else {
     LOG(LL_ERROR, ("Unsupported 'pub_state_mode' parameter value: %d. Allowed values are: %d and %d.",
       pub_state_mode, MGOS_BTHING_PUB_STATE_MODE_NEVER, MGOS_BTHING_PUB_STATE_MODE_ALWAYS));
@@ -71,6 +63,7 @@ static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
   while (mgos_bthing_get_next(&things, &thing)) {
+    LOG(LL_INFO,("Enumerating type %d"), mgos_btging_get_type(thing));
     if (mgos_bthing_is_typeof(thing, MGOS_BBUTTON_TYPE)) {
       mg_bsensor_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bsensor_t)thing));
     }
@@ -79,7 +72,13 @@ static void mg_bbutton_poll_cb(void *arg) {
 }
 
 bool mgos_bbutton_init() {
-  s_bbutton_poll_timer_id = MGOS_INVALID_TIMER_ID;
+   // initialize the polling global timer
+  s_bbutton_poll_timer_id = mgos_set_timer(10, MGOS_TIMER_REPEAT, mg_bbutton_poll_cb, NULL);
+  if (s_bbutton_poll_timer_id == MGOS_INVALID_TIMER_ID) {
+    LOG(LL_ERROR, ("Unable to start the internal polling timer for bButtons.'"));
+    return false;
+  }
+
   if (!mgos_event_register_base(MGOS_BBUTTON_EVENT_BASE, "bButton events")) {
     return false;
   }
