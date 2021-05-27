@@ -125,6 +125,7 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
       bool bool_state = mgos_bvar_get_bool(s_bool_state);
       const char *str_state;
       int ev = mg_bbutton_state_machine_tick(btn, cfg, (bool_state ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
+      LLOG(LL_INFO, ("EV %d", ev));
       switch(ev) {
         case MGOS_EV_BBUTTON_ON_CLICK:
           str_state = MGOS_BBUTTON_STR_STATE_CLICKED;
