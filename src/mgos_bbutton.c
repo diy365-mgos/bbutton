@@ -24,8 +24,8 @@ mgos_bbutton_t mgos_bbutton_create(const char *id, enum mgos_bthing_pub_state_mo
     if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE, pub_state_mode)) {
       struct mg_bbutton_cfg *cfg = calloc(1, sizeof(struct mg_bbutton_cfg));
       if (cfg) {
-        if (mg_bbutton_init(btn, cfg)) {
-          
+        if (mg_bbutton_init(btn, cfg) &&
+            mg_bthing_register(MGOS_BBUTTON_THINGCAST(btn))) {
           LOG(LL_INFO, ("bButton '%s' successfully created.", id));
           return btn;
         }
@@ -63,7 +63,7 @@ static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
   while (mgos_bthing_get_next(&things, &thing)) {
-    LOG(LL_INFO, ("Enumerating type %d", mgos_bthing_get_type(thing)));
+    //LOG(LL_INFO, ("Enumerating type %d", mgos_bthing_get_type(thing)));
     if (mgos_bthing_is_typeof(thing, MGOS_BBUTTON_TYPE)) {
       mg_bsensor_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bsensor_t)thing));
     }
