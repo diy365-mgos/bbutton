@@ -63,7 +63,7 @@ static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
   while (mgos_bthing_get_next(&things, &thing)) {
-    LOG(LL_INFO, ("Enumerating type %d", mgos_btging_get_type(thing)));
+    LOG(LL_INFO, ("Enumerating type %d", mgos_bthing_get_type(thing)));
     if (mgos_bthing_is_typeof(thing, MGOS_BBUTTON_TYPE)) {
       mg_bsensor_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bsensor_t)thing));
     }
