@@ -16,27 +16,22 @@ mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t sensor) {
 }
 
 mgos_bbutton_t mgos_bbutton_create(const char *id, enum mgos_bthing_pub_state_mode pub_state_mode) {
-  if (pub_state_mode != MGOS_BTHING_PUB_STATE_MODE_CHANGED) {
-    mgos_bbutton_t MG_BBUTTON_NEW(btn);
-    if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE, pub_state_mode)) {
-      struct mg_bbutton_cfg *cfg = calloc(1, sizeof(struct mg_bbutton_cfg));
-      if (cfg) {
-        if (mg_bbutton_init(btn, cfg) &&
-            mg_bthing_register(MGOS_BBUTTON_THINGCAST(btn))) {
-          LOG(LL_INFO, ("bButton '%s' successfully created.", id));
-          return btn;
-        }
-        mg_bthing_reset(MG_BTHING_SENS_CAST3(btn));
-      } else {
-        LOG(LL_ERROR, ("Unable to allocate memory for 'mg_bbutton_cfg.'"));
+  mgos_bbutton_t MG_BBUTTON_NEW(btn);
+  if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE, pub_state_mode)) {
+    struct mg_bbutton_cfg *cfg = calloc(1, sizeof(struct mg_bbutton_cfg));
+    if (cfg) {
+      if (mg_bbutton_init(btn, cfg) &&
+          mg_bthing_register(MGOS_BBUTTON_THINGCAST(btn))) {
+        LOG(LL_INFO, ("bButton '%s' successfully created.", id));
+        return btn;
       }
-      free(cfg);
+      mg_bthing_reset(MG_BTHING_SENS_CAST3(btn));
+    } else {
+      LOG(LL_ERROR, ("Unable to allocate memory for 'mg_bbutton_cfg.'"));
     }
-    free(btn);
-  } else {
-    LOG(LL_ERROR, ("Unsupported 'pub_state_mode' parameter value: %d. Allowed values are: %d and %d.",
-      pub_state_mode, MGOS_BTHING_PUB_STATE_MODE_NEVER, MGOS_BTHING_PUB_STATE_MODE_ALWAYS));
+    free(cfg);
   }
+  free(btn);
 
   LOG(LL_ERROR, ("Error creating bButton '%s'. See above error message for more details.'", (id ? id : "")));
   return NULL; 

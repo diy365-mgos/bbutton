@@ -83,6 +83,6 @@ Creates a bButton. Returns `NULL` on error.
 |Parameter||
 |--|--|
 |id|The bButton ID.|
-|pub_state_mode|The [publish-state mode](https://github.com/diy365-mgos/bthing#enum-mgos_bthing_pub_state_mode). The `MGOS_BTHING_PUB_STATE_MODE_CHANGED` value is not allowed.|
+|pub_state_mode|The [publish-state mode](https://github.com/diy365-mgos/bthing#enum-mgos_bthing_pub_state_mode).|
 ## To Do
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).
