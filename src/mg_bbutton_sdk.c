@@ -16,9 +16,8 @@ struct mg_bthing_sens *MG_BBUTTON_CAST1(mgos_bbutton_t thing) {
 }
 /*****************************************/
 
-bool mg_bbutton_upd_state_ex(mgos_bvar_t state,
-                             struct mg_bbutton_cfg *cfg,
-                             enum mgos_bbutton_event new_state) {
+bool mg_bbutton_upd_state_ex(mgos_bvar_t state, struct mg_bbutton_cfg *cfg,
+                             enum mgos_bbutton_event new_state, bool mark_unchanged) {
   const char *str_state;
   switch(new_state) {
     case MGOS_EV_BBUTTON_ON_CLICK:
@@ -54,13 +53,14 @@ bool mg_bbutton_upd_state_ex(mgos_bvar_t state,
     mgos_bvar_add_key(state, MG_BUTTON_SKEY_PRESS_COUNT, mgos_bvar_new_integer(cfg->press_counter));
   }
 
+  if (mark_unchanged) mgos_bvar_set_unchanged(state);
+
   return true;
 }
 
-bool mg_bbutton_upd_state(mgos_bbutton_t btn,
-                          struct mg_bbutton_cfg *cfg,
-                          enum mgos_bbutton_event new_state) {
-  return mg_bbutton_upd_state_ex(MG_BBUTTON_CAST1(btn)->state, cfg, new_state);
+bool mg_bbutton_upd_state(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg,
+                          enum mgos_bbutton_event new_state, bool mark_unchanged) {
+  return mg_bbutton_upd_state_ex(MG_BBUTTON_CAST1(btn)->state, cfg, new_state, mark_unchanged);
 }
 
 void mg_bbutton_state_machine_reset(struct mg_bbutton_cfg *cfg) {
@@ -264,7 +264,8 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
     if (mgos_bvar_get_type(s_bool_state) == MGOS_BVAR_TYPE_BOOL) {
       enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick(btn, cfg,
         (mgos_bvar_get_bool(s_bool_state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
-      return (mg_bbutton_upd_state_ex(state, cfg, ev) ? MG_BTHING_STATE_CB_RET_SUCCESS : MG_BTHING_STATE_CB_RET_NOTHING);
+      LOG(LL_INFO, ("State-machine: %d", ev));
+      return (mg_bbutton_upd_state_ex(state, cfg, ev, false) ? MG_BTHING_STATE_CB_RET_SUCCESS : MG_BTHING_STATE_CB_RET_NOTHING);
 
     } else {
       LOG(LL_ERROR, ("The '%s' get-state handler returned a state of type %d (%d was expected).",
@@ -315,7 +316,7 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
       /* initalize state-machine */
       mg_bbutton_state_machine_reset(cfg);
       /* initalize the state */
-      mg_bbutton_upd_state(btn, cfg, MGOS_EV_BBUTTON_ON_IDLE);
+      mg_bbutton_upd_state(btn, cfg, MGOS_EV_BBUTTON_ON_IDLE, true);
       /* initalize overrides cfg */
       cfg->overrides.getting_state_cb = mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
       /* initalize the state-changed handler */
@@ -350,7 +351,7 @@ void mg_bbutton_reset(mgos_bbutton_t btn) {
   /* clear state-machine */
   mg_bbutton_state_machine_reset(cfg);
   /* clear the state */
-  mg_bbutton_upd_state(btn, cfg, MGOS_EV_BBUTTON_ON_IDLE);
+  mg_bbutton_upd_state(btn, cfg, MGOS_EV_BBUTTON_ON_IDLE, true);
 
   // reset sensor-base obj
   mg_bsensor_reset(btn);
