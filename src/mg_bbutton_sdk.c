@@ -264,7 +264,7 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
     if (mgos_bvar_get_type(s_bool_state) == MGOS_BVAR_TYPE_BOOL) {
       enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick(btn, cfg,
         (mgos_bvar_get_bool(s_bool_state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
-      LOG(LL_INFO, ("State-machine: %d", ev));
+
       return (mg_bbutton_upd_state_ex(state, cfg, ev, false) ? MG_BTHING_STATE_CB_RET_SUCCESS : MG_BTHING_STATE_CB_RET_NOTHING);
 
     } else {
