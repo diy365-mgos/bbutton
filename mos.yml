@@ -15,6 +15,7 @@ filesystem:
 config_schema:
 
 libs:
+  - origin: https://github.com/diy365-mgos/bvar-dic
   - origin: https://github.com/diy365-mgos/bsensor
 
 tags:

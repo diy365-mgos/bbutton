@@ -34,12 +34,11 @@ enum mg_bbutton_push_state {
   MG_BBUTTON_PUSH_STATE_DOWN,
   MG_BBUTTON_PUSH_STATE_FIRST_UP,
   MG_BBUTTON_PUSH_STATE_SECOND_DOWN,
-  MG_BBUTTON_PUSH_STATE_PRESSED
+  MG_BBUTTON_PUSH_STATE_PRESSED,
+  MG_BBUTTON_PUSH_STATE_RESET
 };
 
 #define MG_EV_BBUTTON_NOTHING -1
-#define MG_EV_BBUTTON_ON_IDLE -2
-
 
 /*****************************************
  * Cast Functions

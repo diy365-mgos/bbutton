@@ -20,6 +20,7 @@
 
 #include <stdbool.h>
 #include "mgos_event.h"
+#include "mgos_bvar_dic.h"
 #include "mgos_bthing.h"
 #include "mgos_bsensor.h"
 
@@ -44,6 +45,7 @@ extern "C" {
 #define MGOS_BBUTTON_EVENT_BASE MGOS_EVENT_BASE('B', 'U', 'T')
 enum mgos_bbutton_event {
   MGOS_EV_BBUTTON_ANY = MGOS_BBUTTON_EVENT_BASE,
+  MGOS_EV_BBUTTON_ON_IDLE,
   MGOS_EV_BBUTTON_ON_CLICK,
   MGOS_EV_BBUTTON_ON_DBLCLICK,
   MGOS_EV_BBUTTON_ON_PRESS,

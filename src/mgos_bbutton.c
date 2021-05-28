@@ -7,9 +7,6 @@
 #include "mjs.h"
 #endif
 
-static int s_bbutton_poll_timer_id = MGOS_INVALID_TIMER_ID;
-static void mg_bbutton_poll_cb(void *arg);
-
 mgos_bthing_t MGOS_BBUTTON_THINGCAST(mgos_bbutton_t sensor) {
   return MG_BTHING_SENS_CAST4(MG_BBUTTON_CAST1(sensor));
 }
@@ -63,7 +60,6 @@ static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
   while (mgos_bthing_get_next(&things, &thing)) {
-    //LOG(LL_INFO, ("Enumerating type %d", mgos_bthing_get_type(thing)));
     if (mgos_bthing_is_typeof(thing, MGOS_BBUTTON_TYPE)) {
       mg_bsensor_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bsensor_t)thing));
     }
@@ -72,15 +68,15 @@ static void mg_bbutton_poll_cb(void *arg) {
 }
 
 bool mgos_bbutton_init() {
+  if (!mgos_event_register_base(MGOS_BBUTTON_EVENT_BASE, "bButton events")) {
+    return false;
+  }
+
    // initialize the polling global timer
-  s_bbutton_poll_timer_id = mgos_set_timer(10, MGOS_TIMER_REPEAT, mg_bbutton_poll_cb, NULL);
-  if (s_bbutton_poll_timer_id == MGOS_INVALID_TIMER_ID) {
+  if (mgos_set_timer(10, MGOS_TIMER_REPEAT, mg_bbutton_poll_cb, NULL) == MGOS_INVALID_TIMER_ID) {
     LOG(LL_ERROR, ("Unable to start the internal polling timer for bButtons.'"));
     return false;
   }
 
-  if (!mgos_event_register_base(MGOS_BBUTTON_EVENT_BASE, "bButton events")) {
-    return false;
-  }
   return true;
 }
