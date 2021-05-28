@@ -275,7 +275,7 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
 static void mg_bbutton_state_changed_cb(mgos_bthing_t btn, mgos_bvarc_t state, void *userdata) {
   if (!btn || !state) return;
   mgos_bvar_t ev_state;
-  if (mgos_bvarc_try_get_key(state, MG_BUTTON_STATEKEY_EV, &ev_state) {
+  if (mgos_bvarc_try_get_key(state, MG_BUTTON_STATEKEY_EV, &ev_state)) {
     enum mgos_bbutton_event ev;
     const char *str_state = mgos_bvar_get_str(ev_state);
     if (strcmp(str_state, MGOS_BBUTTON_STR_STATE_CLICKED) == 0) {
