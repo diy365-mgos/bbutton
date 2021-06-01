@@ -192,7 +192,7 @@ Event handler signature (see [mgos_bbutton_on_event()](#mgos_bbutton_on_event) b
 |Parameter||
 |--|--|
 |button|A bButton.|
-|ev|The event.|
+|ev|The triggered [event](#mgos_bbutton_event).|
 |userdata|The handler's *user-data*.|
 ### mgos_bbutton_on_event
 ```c
