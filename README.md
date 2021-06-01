@@ -100,6 +100,27 @@ I'm a bButton.
 I'm a bSensor.
 I'm a bThing sensor.
 ```
+### mgos_bbutton_event
+```c
+enum mgos_bbutton_event {
+  MGOS_EV_BBUTTON_ANY,
+  MGOS_EV_BBUTTON_ON_IDLE,
+  MGOS_EV_BBUTTON_ON_CLICK,
+  MGOS_EV_BBUTTON_ON_DBLCLICK,
+  MGOS_EV_BBUTTON_ON_PRESS,
+  MGOS_EV_BBUTTON_ON_RELEASE
+};
+```
+A bButton publishes these events, so you can subcribe to them using `mgos_event_add_handler()`.
+
+|Event||
+|--|--|
+|MGOS_EV_BBUTTON_ANY|Subscribe to this event using `mgos_event_add_group_handler()` for listening to all events.|
+|MGOS_EV_BBUTTON_ON_IDLE|Published when the bButton returns back to the idle state.|
+|MGOS_EV_BBUTTON_ON_CLICK|Published when the bButton is clicked (single-click).|
+|MGOS_EV_BBUTTON_ON_DBLCLICK|Published when the bButton is double-clicked.|
+|MGOS_EV_BBUTTON_ON_PRESS|Published when the bButton is pressed (long-press).|
+|MGOS_EV_BBUTTON_ON_RELEASE|Published when the bButton is released after a long-press.|
 ### MGOS_BBUTTON_THINGCAST
 ```c
 mgos_bthing_t MGOS_BBUTTON_THINGCAST(mgos_bbutton_t button);
