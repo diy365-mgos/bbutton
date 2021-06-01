@@ -133,5 +133,58 @@ Creates a bButton. Returns `NULL` on error.
 |Parameter||
 |--|--|
 |id|The bButton ID.|
+### mgos_bbutton_is_pressed
+```c
+bool mgos_bbutton_is_pressed(mgos_bbutton_t button);
+```
+Returns `true` if the bButton is pressed (long-press), or `false` otherwise.
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+### mgos_bbutton_get_press_duration
+```c
+int mgos_bbutton_get_press_duration(mgos_bbutton_t button);
+```
+Returns how long the button has been pressed (long-press), in milliseconds.
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+### mgos_bbutton_get_press_count
+```c
+int mgos_bbutton_get_press_count(mgos_bbutton_t button);
+```
+Returns the counter since the button has been pressed (long-press). The counter is increased every `press_repeat_ticks` milliseconds if a value greater than `0` was provided.
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+### (*mgos_bbutton_event_handler_t)
+```c
+typedef void (*mgos_bbutton_event_handler_t)(mgos_bbutton_t button,
+                                             enum mgos_bbutton_event ev,
+                                            void *userdata);
+```
+Event handler signature (see mgos_bbutton_on_event below). 
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+|ev|The event.|
+|userdata|The handler's *user-data*.|
+### mgos_bbutton_on_event
+```c
+bool mgos_bbutton_on_event(mgos_bbutton_t button,
+                           mgos_bbutton_event_handler_t on_event_cb,
+                           void* userdata);
+```
+Adds an event handler to a bButton. 
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+|on_event_cb|The event handler or NULL to reset the handler.|
+|userdata|The *user-data* to pass to the handler or `NULL`. Ignored if `on_event_cb` is `NULL`.|
 ## To Do
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).
