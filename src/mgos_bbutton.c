@@ -43,7 +43,7 @@ bool mgos_bbutton_is_pressed(mgos_bbutton_t button) {
 
 int mgos_bbutton_get_press_duration(mgos_bbutton_t button) {
   if (!mgos_bbutton_is_pressed(button)) return 0; 
-  struct mg_bbutton_cfg *cfg = MG_ZBUTTON_CAST(button);
+  struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG(button);
   return (cfg->stop_time - cfg->start_time);
 }
 
