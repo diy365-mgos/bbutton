@@ -54,10 +54,10 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
 
   // set MG_BUTTON_STATEKEY_PRESS_DURATION
   if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, &key)) {
-    mgos_bvar_set_integer(mgos_bbutton_get_press_duration(btn));
+    mgos_bvar_set_integer(key, mgos_bbutton_get_press_duration(btn));
   } else {
     mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION,
-      mgos_bbutton_get_press_duration(btn));
+      mgos_bvar_new_integer(mgos_bbutton_get_press_duration(btn)));
   }
 
   if (mark_unchanged) mgos_bvar_set_unchanged(state);
