@@ -30,9 +30,9 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
   mgos_bvar_t key;
   // set MG_BUTTON_STATEKEY_EVENT key
   if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &key)) {
-    mgos_bvar_set_integer((key, new_state);
+    mgos_bvar_set_integer(key, new_state);
   } else {
-    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer((new_state));
+    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer(new_state));
   }
 
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
