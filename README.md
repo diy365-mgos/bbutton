@@ -166,7 +166,7 @@ typedef void (*mgos_bbutton_event_handler_t)(mgos_bbutton_t button,
                                              enum mgos_bbutton_event ev,
                                             void *userdata);
 ```
-Event handler signature (see mgos_bbutton_on_event below). 
+Event handler signature (see [mgos_bbutton_on_event()](#mgos_bbutton_on_event) below). 
 
 |Parameter||
 |--|--|
@@ -179,12 +179,12 @@ bool mgos_bbutton_on_event(mgos_bbutton_t button,
                            mgos_bbutton_event_handler_t on_event_cb,
                            void* userdata);
 ```
-Adds an event handler to a bButton. 
+Adds an [event handler](#mgos_bbutton_event_handler_t) to a bButton. 
 
 |Parameter||
 |--|--|
 |button|A bButton.|
-|on_event_cb|The event handler or NULL to reset the handler.|
+|on_event_cb|The [event handler](#mgos_bbutton_event_handler_t) or NULL to reset the handler.|
 |userdata|The *user-data* to pass to the handler or `NULL`. Ignored if `on_event_cb` is `NULL`.|
 ## To Do
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).
