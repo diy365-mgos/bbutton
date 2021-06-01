@@ -64,7 +64,7 @@ mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t button);
 
 typedef void (*mgos_bbutton_event_handler_t)(mgos_bbutton_t button, enum mgos_bbutton_event ev, void *userdata);
 
-mgos_bbutton_t mgos_bbutton_create(const char *id, enum mgos_bthing_pub_state_mode pub_state_mode);
+mgos_bbutton_t mgos_bbutton_create(const char *id);
 
 bool mgos_bbutton_on_event(mgos_bbutton_t button, mgos_bbutton_event_handler_t on_event_cb, void* userdata);
 

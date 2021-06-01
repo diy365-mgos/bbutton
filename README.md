@@ -11,17 +11,67 @@ Include the library in your `mos.yml` file.
 libs:
   - origin: https://github.com/diy365-mgos/bbutton
 ```
-#### Example 1 - Push button
-Create a bButton for reading a *pressed/released* button state. Before running the code sample, you must wire your boardas indicated in the schema below.
+#### Example 1 - Dash button
+Create a dash button. Before running the code sample, you must wire your boardas indicated in the schema below.
 
 ![Example 1 - schema](docs/example_1_schema.png)
 
 In addition, include this library in your `mos.yml` file.
 ```yaml
 libs:
+  - origin: https://github.com/diy365-mgos/bvar-json
   - origin: https://github.com/diy365-mgos/bthing-gpio
 ```
 ```c
+#include "mgos.h"
+#include "mgos_bvar_json.h"
+#include "mgos_bthing_gpio.h"
+#include "mgos_bbutton.h"
+
+static int gpio_pin = 14;
+
+static void button_state_changed_cb(int ev, void *ev_data, void *userdata) {
+  mgos_bthing_t thing = MGOS_BBUTTON_THINGCAST((mgos_bbutton_t)ev_data);
+
+  char *json = json_asprintf("%M", json_printf_bvar, mgos_bthing_get_state(thing));
+  LOG(LL_INFO, ("Button '%s' state: %s", mgos_bthing_get_id(thing), json));
+  free(json);
+}
+
+static void button_on_event_cb(mgos_bbutton_t btn, enum mgos_bbutton_event ev, void *userdata) {
+  mgos_bthing_t thing = MGOS_BBUTTON_THINGCAST(btn);
+  const char *id = mgos_bthing_get_id(thing);
+
+  switch (ev) {
+    case MGOS_EV_BBUTTON_ON_CLICK:
+      LOG(LL_INFO, ("Button '%s' event: CLICK", id));
+      break;
+    case MGOS_EV_BBUTTON_ON_DBLCLICK:
+      LOG(LL_INFO, ("Button '%s' event: DOUBLE-CLICK", id));
+      break;
+    case MGOS_EV_BBUTTON_ON_PRESS:
+      LOG(LL_INFO, ("Button '%s' event: LONG-PRESS", id));
+      break;
+    case MGOS_EV_BBUTTON_ON_RELEASE:
+      LOG(LL_INFO, ("Button '%s' event: LONG-PRESS-END", id));
+      break;
+    default:
+      break;
+  }
+} 
+
+enum mgos_app_init_result mgos_app_init(void) {
+  mgos_event_add_handler(MGOS_EV_BTHING_STATE_CHANGED, button_state_changed_cb, NULL);
+
+  /* create the sensor */
+  mgos_bbutton_t btn = mgos_bbutton_create("btn1");
+  /* attach GPIO  */
+  mgos_bthing_gpio_attach(MGOS_BBUTTON_THINGCAST(btn), gpio_pin, false, true);
+  /* set the event handler callback */
+  mgos_bbutton_on_event(btn, button_on_event_cb, NULL);
+
+  return MGOS_APP_INIT_SUCCESS;
+}
 ```
 ## C/C++ APIs Reference
 ### Inherited APIs
@@ -76,13 +126,12 @@ Casts a bButton to a bSensor to be used with [inherited bSensor APIs](https://gi
 |button|A bButton.|
 ### mgos_bbutton_create
 ```c
-mgos_bbutton_t mgos_bbutton_create(const char *id, enum mgos_bthing_pub_state_mode pub_state_mode);
+mgos_bbutton_t mgos_bbutton_create(const char *id);
 ```
 Creates a bButton. Returns `NULL` on error.
 
 |Parameter||
 |--|--|
 |id|The bButton ID.|
-|pub_state_mode|The [publish-state mode](https://github.com/diy365-mgos/bthing#enum-mgos_bthing_pub_state_mode).|
 ## To Do
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).
