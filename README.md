@@ -92,15 +92,8 @@ static bool btn_get_state_handler(mgos_bthing_t thing, mgos_bvar_t state, void *
 }
 ```
 #### Remarks on mgos_bthing_get_state
-The tnherited [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state) returns a [bVariantDictionary](https://github.com/diy365-mgos/bvar-dic) having following keys:
-```json
-{
-  "event",
-  "pressCount",
-  "pressDuration",
-}
-```
-|Key|Type|
+The inherited [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state) returns a [bVariantDictionary](https://github.com/diy365-mgos/bvar-dic) having following keys:
+|Key|Type||
 |--|--|--|
 |event|string|The last event occurred: `CLICKED`, `DBLCLICKED`, `PRESSED`, `RELEASED` or `IDLE`.|
 |pressCount|integer|The press (long-press) counter or `0` in case the button was just ckicked or double-clicked.|
