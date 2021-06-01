@@ -102,9 +102,9 @@ The tnherited [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mg
 ```
 |Key|Type|
 |--|--|--|
-|event|string|The last event occurred:|
-|pressCount|integer||
-|pressDuration|integer||
+|event|string|The last event occurred: `CLICKED`, `DBLCLICKED`, `PRESSED`, `RELEASED` or `IDLE`.|
+|pressCount|integer|The press (long-press) counter or `0` in case the button was just ckicked or double-clicked.|
+|pressDuration|integer|The press (long-press) duration in milliseconds, or `0` in case the button was just ckicked or double-clicked.|
 ### MGOS_BBUTTON_TYPE
 ```c
 #define MGOS_BBUTTON_TYPE 16
