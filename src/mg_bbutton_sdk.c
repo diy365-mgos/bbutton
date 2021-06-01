@@ -66,7 +66,7 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
 }
 
 bool mg_bbutton_upd_state(mgos_bbutton_t btn, enum mgos_bbutton_event new_state, bool mark_unchanged) {
-  return mg_bbutton_upd_state_ex(mgos_bbutton_t btn, MG_BBUTTON_CAST1(btn)->state, new_state, mark_unchanged);
+  return mg_bbutton_upd_state_ex(btn, MG_BBUTTON_CAST1(btn)->state, new_state, mark_unchanged);
 }
 
 void mg_bbutton_state_machine_reset(struct mg_bbutton_cfg *cfg) {
