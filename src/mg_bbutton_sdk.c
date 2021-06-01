@@ -15,33 +15,24 @@ struct mg_bthing_sens *MG_BBUTTON_CAST1(mgos_bbutton_t thing) {
 
 bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
                              enum mgos_bbutton_event new_state, bool mark_unchanged) {
-  const char *str_state;
   switch(new_state) {
     case MGOS_EV_BBUTTON_ON_CLICK:
-      str_state = MGOS_EV_BBUTTON_STR_CLICKED;
-      break;
     case MGOS_EV_BBUTTON_ON_DBLCLICK:
-      str_state = MGOS_EV_BBUTTON_STR_DBLCLICKED;
-      break;
     case MGOS_EV_BBUTTON_ON_PRESS:
-      str_state = MGOS_EV_BBUTTON_STR_PRESSED;
-      break;
     case MGOS_EV_BBUTTON_ON_RELEASE:
-      str_state = MGOS_EV_BBUTTON_STR_RELEASED;
-      break;
     case MGOS_EV_BBUTTON_ON_IDLE:
-      str_state = MGOS_EV_BBUTTON_STR_IDLE;
+      new_state = (new_state - MGOS_EV_BBUTTON_ANY);
       break;
     default:
       return false;
   }
 
   mgos_bvar_t key;
-  // set MG_BUTTON_STATEKEY_EV key
-  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EV, &key)) {
-    mgos_bvar_set_str(key, str_state);
+  // set MG_BUTTON_STATEKEY_EVENT key
+  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &key)) {
+    mgos_bvar_set_integer((key, new_state);
   } else {
-    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EV, mgos_bvar_new_str(str_state));
+    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer((new_state));
   }
 
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
@@ -191,21 +182,9 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
 static void mg_bbutton_state_changed_cb(mgos_bthing_t btn, mgos_bvarc_t state, void *userdata) {
   if (!btn || !state) return;
   mgos_bvarc_t ev_state;
-  if (mgos_bvarc_try_get_key(state, MG_BUTTON_STATEKEY_EV, &ev_state)) {
-    enum mgos_bbutton_event ev;
-    const char *str_state = mgos_bvar_get_str(ev_state);
-    if (strcmp(str_state, MGOS_EV_BBUTTON_STR_CLICKED) == 0) {
-      ev = MGOS_EV_BBUTTON_ON_CLICK;
-    } else if (strcmp(str_state, MGOS_EV_BBUTTON_STR_DBLCLICKED) == 0) {
-      ev = MGOS_EV_BBUTTON_ON_DBLCLICK;
-    } else if (strcmp(str_state, MGOS_EV_BBUTTON_STR_PRESSED) == 0) {
-      ev = MGOS_EV_BBUTTON_ON_PRESS;
-    } else if (strcmp(str_state, MGOS_EV_BBUTTON_STR_RELEASED) == 0) {    
-      ev = MGOS_EV_BBUTTON_ON_RELEASE;
-    } else {
-      return;
-    }
-    
+  if (mgos_bvarc_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &ev_state)) {
+    enum mgos_bbutton_event ev = (mgos_bvar_get_integer(ev_state) + MGOS_EV_BBUTTON_ANY);
+        
     // invoke the event handler
     struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG((mgos_bbutton_t)btn);
     if (cfg->on_event_cb) {

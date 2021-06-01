@@ -36,15 +36,9 @@ extern "C" {
 #define MGOS_BBUTTON_DEFAULT_PRESS_TICKS 1000 //1 second
 #define MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS 50 //milliseconds
 
-#define MG_BUTTON_STATEKEY_EV              "event"
+#define MG_BUTTON_STATEKEY_EVENT           "event"
 #define MG_BUTTON_STATEKEY_PRESS_COUNT     "pressCount"
 #define MG_BUTTON_STATEKEY_PRESS_DURATION  "pressDuration"
-
-#define MGOS_EV_BBUTTON_STR_IDLE         "ON_IDLE"
-#define MGOS_EV_BBUTTON_STR_CLICKED      "ON_CLICK"
-#define MGOS_EV_BBUTTON_STR_DBLCLICKED   "ON_DBLCLICK"
-#define MGOS_EV_BBUTTON_STR_PRESSED      "ON_PRESS"
-#define MGOS_EV_BBUTTON_STR_RELEASED     "ON_RELEASE"
 
 #define MGOS_BBUTTON_EVENT_BASE MGOS_EVENT_BASE('B', 'U', 'T')
 enum mgos_bbutton_event {
