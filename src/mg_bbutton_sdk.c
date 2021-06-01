@@ -18,19 +18,19 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
   const char *str_state;
   switch(new_state) {
     case MGOS_EV_BBUTTON_ON_CLICK:
-      str_state = MGOS_BBUTTON_STR_STATE_CLICKED;
+      str_state = MGOS_EV_BBUTTON_STR_CLICKED;
       break;
     case MGOS_EV_BBUTTON_ON_DBLCLICK:
-      str_state = MGOS_BBUTTON_STR_STATE_DBLCLICKED;
+      str_state = MGOS_EV_BBUTTON_STR_DBLCLICKED;
       break;
     case MGOS_EV_BBUTTON_ON_PRESS:
-      str_state = MGOS_BBUTTON_STR_STATE_PRESSED;
+      str_state = MGOS_EV_BBUTTON_STR_PRESSED;
       break;
     case MGOS_EV_BBUTTON_ON_RELEASE:
-      str_state = MGOS_BBUTTON_STR_STATE_RELEASED;
+      str_state = MGOS_EV_BBUTTON_STR_RELEASED;
       break;
     case MGOS_EV_BBUTTON_ON_IDLE:
-      str_state = MGOS_BBUTTON_STR_STATE_IDLE;
+      str_state = MGOS_EV_BBUTTON_STR_IDLE;
       break;
     default:
       return false;
@@ -194,13 +194,13 @@ static void mg_bbutton_state_changed_cb(mgos_bthing_t btn, mgos_bvarc_t state, v
   if (mgos_bvarc_try_get_key(state, MG_BUTTON_STATEKEY_EV, &ev_state)) {
     enum mgos_bbutton_event ev;
     const char *str_state = mgos_bvar_get_str(ev_state);
-    if (strcmp(str_state, MGOS_BBUTTON_STR_STATE_CLICKED) == 0) {
+    if (strcmp(str_state, MGOS_EV_BBUTTON_STR_CLICKED) == 0) {
       ev = MGOS_EV_BBUTTON_ON_CLICK;
-    } else if (strcmp(str_state, MGOS_BBUTTON_STR_STATE_DBLCLICKED) == 0) {
+    } else if (strcmp(str_state, MGOS_EV_BBUTTON_STR_DBLCLICKED) == 0) {
       ev = MGOS_EV_BBUTTON_ON_DBLCLICK;
-    } else if (strcmp(str_state, MGOS_BBUTTON_STR_STATE_PRESSED) == 0) {
+    } else if (strcmp(str_state, MGOS_EV_BBUTTON_STR_PRESSED) == 0) {
       ev = MGOS_EV_BBUTTON_ON_PRESS;
-    } else if (strcmp(str_state, MGOS_BBUTTON_STR_STATE_RELEASED) == 0) {    
+    } else if (strcmp(str_state, MGOS_EV_BBUTTON_STR_RELEASED) == 0) {    
       ev = MGOS_EV_BBUTTON_ON_RELEASE;
     } else {
       return;
