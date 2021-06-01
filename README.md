@@ -44,16 +44,19 @@ static void button_on_event_cb(mgos_bbutton_t btn, enum mgos_bbutton_event ev, v
 
   switch (ev) {
     case MGOS_EV_BBUTTON_ON_CLICK:
-      LOG(LL_INFO, ("Button '%s' event: CLICK", id));
+      LOG(LL_INFO, ("Button '%s' event: ON-CLICK", id));
       break;
     case MGOS_EV_BBUTTON_ON_DBLCLICK:
-      LOG(LL_INFO, ("Button '%s' event: DOUBLE-CLICK", id));
+      LOG(LL_INFO, ("Button '%s' event: ON-DBLCLICK", id));
       break;
     case MGOS_EV_BBUTTON_ON_PRESS:
-      LOG(LL_INFO, ("Button '%s' event: LONG-PRESS", id));
+      LOG(LL_INFO, ("Button '%s' event: ON-PRESS", id));
       break;
     case MGOS_EV_BBUTTON_ON_RELEASE:
-      LOG(LL_INFO, ("Button '%s' event: LONG-PRESS-END", id));
+      LOG(LL_INFO, ("Button '%s' event: ON-RELEASE", id));
+      break;
+    case MGOS_EV_BBUTTON_ON_IDLE:
+      LOG(LL_INFO, ("Button '%s' event: ON-IDLE", id));
       break;
     default:
       break;
