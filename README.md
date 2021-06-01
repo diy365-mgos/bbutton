@@ -78,6 +78,33 @@ enum mgos_app_init_result mgos_app_init(void) {
 A bButton inherits APIs from:
 - [bThing](https://github.com/diy365-mgos/bthing)
 - [bSensor](https://github.com/diy365-mgos/bsensor)
+#### Remarks on (*mgos_bthing_get_state_handler_t)
+The [*get-state* handler](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state_handler_t) of a bButton must set the state to `true` when the physical button is pressed.
+
+Example
+```c
+static bool btn_get_state_handler(mgos_bthing_t thing, mgos_bvar_t state, void *userdata) {
+  if (btn_is_pressed(...))
+    mgos_bvar_set_bool(true);
+  else
+    mgos_bvar_set_bool(false);
+  return true;
+}
+```
+#### Remarks on mgos_bthing_get_state
+The tnherited [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state) returns a [bVariantDictionary](https://github.com/diy365-mgos/bvar-dic) having following keys:
+```json
+{
+  "event",
+  "pressCount",
+  "pressDuration",
+}
+```
+|Key|Type|
+|--|--|--|
+|event|string|The last event occurred:|
+|pressCount|integer||
+|pressDuration|integer||
 ### MGOS_BBUTTON_TYPE
 ```c
 #define MGOS_BBUTTON_TYPE 16

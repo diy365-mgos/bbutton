@@ -118,7 +118,8 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
   } else if (cfg->push_state == MG_BBUTTON_PUSH_STATE_FIRST_UP) {
     // waiting for button being pressed the second time or timeout.
     if (((now - cfg->start_time) / 1000) > cfg->click_ticks) {
-      cfg->push_state = MG_BBUTTON_PUSH_STATE_RESET; // going to be restarted 
+      cfg->start_time = cfg->stop_time = 0;
+      cfg->push_state = MG_BBUTTON_PUSH_STATE_RESET; // going to be restarted
       return MGOS_EV_BBUTTON_ON_CLICK;
 
     } else if (new_push_state == MG_BBUTTON_PUSH_STATE_DOWN) {
@@ -134,7 +135,7 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
     if (new_push_state == MG_BBUTTON_PUSH_STATE_UP) {
       if (((now - cfg->start_time) / 1000) > cfg->debounce_ticks) {
         // this was a 2 click sequence.
-        cfg->stop_time = now;
+        cfg->start_time = cfg->stop_time = 0;
         cfg->push_state = MG_BBUTTON_PUSH_STATE_RESET; // going to be restarted
         return MGOS_EV_BBUTTON_ON_DBLCLICK;
 
