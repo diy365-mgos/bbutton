@@ -62,7 +62,7 @@ struct mg_bbutton_cfg {
   void *on_event_ud;
   int64_t start_time;
   int64_t stop_time;
-  int press_counter;
+  int press_count;
   int click_ticks;
   int press_ticks;
   int press_repeat_ticks;

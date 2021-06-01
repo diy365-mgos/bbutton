@@ -13,7 +13,7 @@ struct mg_bthing_sens *MG_BBUTTON_CAST1(mgos_bbutton_t thing) {
 }
 /*****************************************/
 
-bool mg_bbutton_upd_state_ex(mgos_bvar_t state, struct mg_bbutton_cfg *cfg,
+bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
                              enum mgos_bbutton_event new_state, bool mark_unchanged) {
   const char *str_state;
   switch(new_state) {
@@ -43,11 +43,21 @@ bool mg_bbutton_upd_state_ex(mgos_bvar_t state, struct mg_bbutton_cfg *cfg,
   } else {
     mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EV, mgos_bvar_new_str(str_state));
   }
+
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
   if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, &key)) {
-    mgos_bvar_set_integer(key, cfg->press_counter);
+    mgos_bvar_set_integer(key, mgos_bbutton_get_press_count(btn));
   } else {
-    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bvar_new_integer(cfg->press_counter));
+    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT,
+      mgos_bvar_new_integer(mgos_bbutton_get_press_count(btn)));
+  }
+
+  // set MG_BUTTON_STATEKEY_PRESS_DURATION
+  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, &key)) {
+    mgos_bvar_set_integer(mgos_bbutton_get_press_duration(btn));
+  } else {
+    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION,
+      mgos_bbutton_get_press_duration(btn));
   }
 
   if (mark_unchanged) mgos_bvar_set_unchanged(state);
@@ -55,16 +65,15 @@ bool mg_bbutton_upd_state_ex(mgos_bvar_t state, struct mg_bbutton_cfg *cfg,
   return true;
 }
 
-bool mg_bbutton_upd_state(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg,
-                          enum mgos_bbutton_event new_state, bool mark_unchanged) {
-  return mg_bbutton_upd_state_ex(MG_BBUTTON_CAST1(btn)->state, cfg, new_state, mark_unchanged);
+bool mg_bbutton_upd_state(mgos_bbutton_t btn, enum mgos_bbutton_event new_state, bool mark_unchanged) {
+  return mg_bbutton_upd_state_ex(mgos_bbutton_t btn, MG_BBUTTON_CAST1(btn)->state, new_state, mark_unchanged);
 }
 
 void mg_bbutton_state_machine_reset(struct mg_bbutton_cfg *cfg) {
   cfg->push_state = MG_BBUTTON_PUSH_STATE_UP;
   cfg->start_time = 0;
   cfg->stop_time = 0;
-  cfg->press_counter = 0;
+  cfg->press_count = 0;
 }
 
 static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
@@ -101,7 +110,7 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
         // The button starts being pressed (long press). 
         cfg->push_state = MG_BBUTTON_PUSH_STATE_PRESSED;
         cfg->stop_time = now;
-        cfg->press_counter = 1;
+        cfg->press_count = 1;
         return MGOS_EV_BBUTTON_ON_PRESS;
       }
     }
@@ -146,7 +155,7 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
       if (cfg->press_repeat_ticks > 0 &&
           ((now - cfg->stop_time) / 1000) >= cfg->press_repeat_ticks) {
         cfg->stop_time = now;
-        cfg->press_counter += 1;
+        cfg->press_count += 1;
         return MGOS_EV_BBUTTON_ON_PRESS;
 
       }
@@ -155,100 +164,6 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
 
   return MG_EV_BBUTTON_NOTHING; // -1
 }
-
-/* static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
-                                                             struct mg_bbutton_cfg *cfg,
-                                                             enum mg_bbutton_push_state new_push_state) {
-  int64_t now = mgos_uptime_micros();
-
-  // Implementation of the state machine
- 
-  if (cfg->push_state == MG_BBUTTON_PUSH_STATE_UP) { // waiting for button being pressed.
-    if (new_push_state == MG_BBUTTON_PUSH_STATE_DOWN) {
-      cfg->push_state = MG_BBUTTON_PUSH_STATE_DOWN;
-      cfg->start_time = now;
-    } else {
-      if (strcmp(mgos_bvar_get_str(MG_BBUTTON_CAST1(btn)->state), MGOS_BBUTTON_STR_STATE_IDLE) != 0) {
-        return MGOS_EV_BBUTTON_ON_IDLE;
-      }
-    }
-
-  } else if (cfg->push_state == MG_BBUTTON_PUSH_STATE_DOWN) { // waiting for button being released.
-    int start_ticks = ((now - cfg->start_time) / 1000);
-    if (new_push_state == MG_BBUTTON_PUSH_STATE_UP) {
-      if (cfg->debounce_ticks > 0 && start_ticks < cfg->debounce_ticks) {
-        // The button was released to quickly so I assume some debouncing.
-        // So, go back to STATE_UP without calling a function.
-        mg_bbutton_state_machine_reset(cfg); // restart
-      } else {
-        // The button was released for the firt time.
-        cfg->push_state = MG_BBUTTON_PUSH_STATE_FIRST_UP;
-        cfg->stop_time = now;
-      }
-    } else if (new_push_state == MG_BBUTTON_PUSH_STATE_DOWN) {
-      if (start_ticks > cfg->press_ticks) {
-        // The button starts being pressed (long press). 
-        cfg->push_state = MG_BBUTTON_PUSH_STATE_PRESSED;
-        cfg->stop_time = now;
-        cfg->press_counter = 1;
-
-        return MGOS_EV_BBUTTON_ON_PRESS;
-      }
-    }
-
-  } else if (cfg->push_state == MG_BBUTTON_PUSH_STATE_FIRST_UP) {
-    // waiting for button being pressed the second time or timeout.
-    if (((now - cfg->start_time) / 1000) > cfg->click_ticks) {
-      mg_bbutton_state_machine_reset(cfg); // restart
-      
-      return MGOS_EV_BBUTTON_ON_CLICK;
-
-    } else if (new_push_state == MG_BBUTTON_PUSH_STATE_DOWN) {
-      if (cfg->debounce_ticks == 0 || ((now - cfg->stop_time) / 1000) > cfg->debounce_ticks) {
-        cfg->push_state = MG_BBUTTON_PUSH_STATE_SECOND_DOWN;
-        cfg->start_time = now;
-      }
-    }
-
-  } else if (cfg->push_state == MG_BBUTTON_PUSH_STATE_SECOND_DOWN) { // waiting for button being released finally.
-    // Stay here for at least cfg->debounce_ticks because else we might end up in
-    // state 1 if the button bounces for too long.
-    if (new_push_state == MG_BBUTTON_PUSH_STATE_UP) {
-      if (((now - cfg->start_time) / 1000) > cfg->debounce_ticks) {
-        // this was a 2 click sequence.
-        cfg->stop_time = now;
-        mg_bbutton_state_machine_reset(cfg); // restart
-
-        return MGOS_EV_BBUTTON_ON_DBLCLICK;
-      }
-    }
-
-  } else if (cfg->push_state == MG_BBUTTON_PUSH_STATE_PRESSED) {
-
-    // The button is pressed (long press).
-    // So, waiting for the button being released.
-    if (new_push_state == MG_BBUTTON_PUSH_STATE_UP) {
-      // The button is released after a long press
-      cfg->stop_time = now;
-      mg_bbutton_state_machine_reset(cfg); // restart
-
-      return MGOS_EV_BBUTTON_ON_RELEASE; 
-      
-    } else {
-      // The button continue being pressed (long press).
-      if (cfg->press_repeat_ticks > 0 &&
-          ((now - cfg->stop_time) / 1000) >= cfg->press_repeat_ticks) {
-        cfg->stop_time = now;
-        cfg->press_counter += 1;
-
-        return MGOS_EV_BBUTTON_ON_PRESS;
-      }
-    }
-  }
-
-  return MG_EV_BBUTTON_NOTHING;
-}
- */
 
 enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *btn,
                                                         mgos_bvar_t state,
@@ -262,7 +177,7 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
       enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick(btn, cfg,
         (mgos_bvar_get_bool(s_bool_state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
 
-      return (mg_bbutton_upd_state_ex(state, cfg, ev, false) ? MG_BTHING_STATE_CB_RET_SUCCESS : MG_BTHING_STATE_CB_RET_NOTHING);
+      return (mg_bbutton_upd_state_ex((mgos_bbutton_t)btn, state, ev, false) ? MG_BTHING_STATE_CB_RET_SUCCESS : MG_BTHING_STATE_CB_RET_NOTHING);
 
     } else {
       LOG(LL_ERROR, ("The '%s' get-state handler returned a state of type %d (%d was expected).",
@@ -314,7 +229,7 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
       /* initalize state-machine */
       mg_bbutton_state_machine_reset(cfg);
       /* initalize the state */
-      mg_bbutton_upd_state(btn, cfg, MGOS_EV_BBUTTON_ON_IDLE, true);
+      mg_bbutton_upd_state(btn, MGOS_EV_BBUTTON_ON_IDLE, true);
       /* initalize overrides cfg */
       cfg->overrides.getting_state_cb = mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
       /* initalize the state-changed handler */
@@ -349,7 +264,7 @@ void mg_bbutton_reset(mgos_bbutton_t btn) {
   /* clear state-machine */
   mg_bbutton_state_machine_reset(cfg);
   /* clear the state */
-  mg_bbutton_upd_state(btn, cfg, MGOS_EV_BBUTTON_ON_IDLE, true);
+  mg_bbutton_upd_state(btn, MGOS_EV_BBUTTON_ON_IDLE, true);
 
   // reset sensor-base obj
   mg_bsensor_reset(btn);

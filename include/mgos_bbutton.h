@@ -36,8 +36,9 @@ extern "C" {
 #define MGOS_BBUTTON_DEFAULT_PRESS_TICKS 1000 //1 second
 #define MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS 50 //milliseconds
 
-#define MG_BUTTON_STATEKEY_EV           "event"
-#define MG_BUTTON_STATEKEY_PRESS_COUNT  "pressCount"
+#define MG_BUTTON_STATEKEY_EV              "event"
+#define MG_BUTTON_STATEKEY_PRESS_COUNT     "pressCount"
+#define MG_BUTTON_STATEKEY_PRESS_DURATION  "pressDuration"
 
 #define MGOS_BBUTTON_STR_STATE_IDLE         "IDLE"
 #define MGOS_BBUTTON_STR_STATE_CLICKED      "CLICKED"
@@ -65,6 +66,12 @@ mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t button);
 typedef void (*mgos_bbutton_event_handler_t)(mgos_bbutton_t button, enum mgos_bbutton_event ev, void *userdata);
 
 mgos_bbutton_t mgos_bbutton_create(const char *id);
+
+bool mgos_bbutton_is_pressed(mgos_bbutton_t button);
+
+int mgos_bbutton_get_press_duration(mgos_bbutton_t button);
+
+int mgos_bbutton_get_press_count(mgos_bbutton_t button);
 
 bool mgos_bbutton_on_event(mgos_bbutton_t button, mgos_bbutton_event_handler_t on_event_cb, void* userdata);
 

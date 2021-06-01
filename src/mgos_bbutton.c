@@ -37,6 +37,20 @@ mgos_bbutton_t mgos_bbutton_create(const char *id) {
   return NULL; 
 }
 
+bool mgos_bbutton_is_pressed(mgos_bbutton_t button) {
+  return (!button ? false : (MG_BBUTTON_CFG(button)->push_state == MG_BBUTTON_PUSH_STATE_PRESSED));
+}
+
+int mgos_bbutton_get_press_duration(mgos_bbutton_t button) {
+  if (!mgos_bbutton_is_pressed(button)) return 0; 
+  struct mg_bbutton_cfg *cfg = MG_ZBUTTON_CAST(button);
+  return (cfg->stop_time - cfg->start_time);
+}
+
+int mgos_bbutton_get_press_count(mgos_bbutton_t button) {
+  return (!button ? 0 : MG_BBUTTON_CFG(button)->press_count);
+}
+
 bool mgos_bbutton_on_event(mgos_bbutton_t button, mgos_bbutton_event_handler_t on_event_cb, void* userdata) {
   if (button) {
     struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG(button);
