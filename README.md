@@ -87,10 +87,9 @@ The [*get-state* handler](https://github.com/diy365-mgos/bthing#mgos_bthing_get_
 Example
 ```c
 static bool btn_get_state_handler(mgos_bthing_t thing, mgos_bvar_t state, void *userdata) {
-  if (btn_is_pressed(...))
-    mgos_bvar_set_bool(state, true);
-  else
-    mgos_bvar_set_bool(state, false);
+  bool is_pressed;
+  // ... check if the physical button is pressed
+  mgos_bvar_set_bool(state, is_pressed);
   return true;
 }
 ```
