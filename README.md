@@ -246,7 +246,7 @@ bButton configuration parameters.
 |click_ticks|Single click duration, in milliseconds.|
 |press_ticks|Long-press duration, in milliseconds.|
 |press_repeat_ticks|Interval, in milliseconds, for raising multiple `MGOS_EV_BBUTTON_ON_PRESS` events, subsequent to the first one.|
-|debounce_ticks|Debounce interval in milliseconds. `0` value means no-debounce.|
+|debounce_ticks|Debounce interval in milliseconds. `0` means no-debounce.|
 ### mgos_bbutton_set_cfg
 ```c
 bool mgos_bbutton_set_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
@@ -262,12 +262,12 @@ Sets bButton configuration. Returns `true` on success, or `false` otherwise.
 
 You can set parameter values to `-1` for using defaults:
 
-|Parameter||
+|Parameter|Defualt|
 |--|--|
-|click_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_CLICK_TICKS` (600 ms).|
-|press_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_PRESS_TICKS` (1 s).|
-|press_repeat_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_PRESS_TICKS` (1 s).|
-|debounce_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS` (50 ms).|
+|click_ticks|`MGOS_BBUTTON_DEFAULT_CLICK_TICKS` (600 ms).|
+|press_ticks|`MGOS_BBUTTON_DEFAULT_PRESS_TICKS` (1 s).|
+|press_repeat_ticks|`MGOS_BBUTTON_DEFAULT_PRESS_TICKS` (1 s).|
+|debounce_ticks|`MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS` (50 ms).|
 ### mgos_bbutton_get_cfg
 ```c
 bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
