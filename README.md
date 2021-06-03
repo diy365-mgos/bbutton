@@ -1,10 +1,10 @@
 # bButtons Library
 ## Overview
-A bButton is a specilized version of [bSensor](https://github.com/diy365-mgos/bsensor). It allows you to easily manage bSensors having just binary (true/false) state.
+A bButton allows you to easily manage button's events like click, double-click and long-press. It is a specilized version of [bSensor](https://github.com/diy365-mgos/bsensor).
 ## Features
 - **Universal value-types** - You can read any sensor value within the supported [bVariant](https://github.com/diy365-mgos/bvar) data-types.
 - **Verbose state** - Optionally, you can configure verbose states intead of default booleans (e.g: 'ON'/'OFF').
-- **GPIO as sensors** - You can easily manage GPIO as sensors. Just include the [bThings GPIO library](https://github.com/diy365-mgos/bthing-gpio) in your project.
+- **GPIO as buttons** - You can easily manage buttons attached to input GPIOs. Just include the [bThings GPIO library](https://github.com/diy365-mgos/bthing-gpio) in your project.
 ## Get Started in C/C++
 Include the library in your `mos.yml` file.
 ```yaml
