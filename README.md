@@ -230,5 +230,53 @@ Adds an [event handler](#mgos_bbutton_event_handler_t) to a bButton.
 |button|A bButton.|
 |on_event_cb|The [event handler](#mgos_bbutton_event_handler_t) or NULL to reset the handler.|
 |userdata|The *user-data* to pass to the handler or `NULL`. Ignored if `on_event_cb` is `NULL`.|
+### mgos_bbutton_cfg
+```c
+struct mgos_bbutton_cfg {
+  int click_ticks;
+  int press_ticks;
+  int press_repeat_ticks;
+  int debounce_ticks;
+};
+```
+bButton configuration parameters.
+
+|Field||
+|--|--|
+|click_ticks|Single click duration, in milliseconds.|
+|press_ticks|Long-press duration, in milliseconds.|
+|press_repeat_ticks|Interval, in milliseconds, for raising multiple `MGOS_EV_BBUTTON_ON_PRESS` events, subsequent to the first one.|
+|debounce_ticks|Debounce interval in milliseconds. The `0` value means no-debounce.|
+### mgos_bbutton_set_cfg
+```c
+bool mgos_bbutton_set_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
+```
+Sets bButton configuration. Returns `true` on success, or `false` otherwise.
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+|cfg|Configuration parameters.|
+
+**Remarks**
+
+You can set a parameter to `-1` for using its default value:
+
+|Parameter||
+|--|--|
+|click_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_CLICK_TICKS` (600 ms).|
+|press_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_PRESS_TICKS` (1 s).|
+|press_repeat_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_PRESS_TICKS` (1 s).|
+|debounce_ticks|Defualt value `MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS` (50 ms).|
+### mgos_bbutton_get_cfg
+```c
+bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
+```
+Gets bButton configuration. Returns `true` on success, or `false` otherwise.
+
+|Parameter||
+|--|--|
+|button|A bButton.|
+|cfg|Output configuration parameters.|
 ## To Do
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).

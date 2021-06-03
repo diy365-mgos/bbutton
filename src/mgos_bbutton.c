@@ -64,6 +64,23 @@ bool mgos_bbutton_on_event(mgos_bbutton_t button, mgos_bbutton_event_handler_t o
   return false;
 }
 
+bool mgos_bbutton_set_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg) {
+  if (!button || !cfg) return false;
+  struct mg_bbutton_cfg *bcfg = MG_BBUTTON_CFG(button);
+  bcfg->click_ticks = (cfg->click_ticks == -1 ? MGOS_BBUTTON_DEFAULT_CLICK_TICKS : cfg->click_ticks);
+  bcfg->press_ticks = (cfg->press_ticks == -1 ? MGOS_BBUTTON_DEFAULT_PRESS_TICKS : cfg->press_ticks);
+  bcfg->press_repeat_ticks = (cfg->press_repeat_ticks == -1 ? MGOS_BBUTTON_DEFAULT_PRESS_TICKS : cfg->press_repeat_ticks);
+  bcfg->debounce_ticks = (cfg->debounce_ticks == -1 ? MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS : cfg->debounce_ticks);
+  return true;
+}
+
+bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg) {
+  if (!button || !cfg) return false;
+  struct mg_bbutton_cfg *bcfg = MG_BBUTTON_CFG(button);
+  memcpy(cfg, bcfg, sizeof(struct mgos_bbutton_cfg ));
+  return true;
+}
+
 static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();

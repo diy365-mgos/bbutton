@@ -53,6 +53,14 @@ enum mgos_bbutton_event {
 struct mg_bthing_sens;
 typedef struct mg_bthing_sens *mgos_bbutton_t;
 
+struct mgos_bbutton_cfg {
+  int click_ticks;
+  int press_ticks;
+  int press_repeat_ticks;
+  int debounce_ticks;
+};
+
+
 mgos_bthing_t MGOS_BBUTTON_THINGCAST(mgos_bbutton_t button);
 
 mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t button);
@@ -66,6 +74,9 @@ bool mgos_bbutton_is_pressed(mgos_bbutton_t button);
 int mgos_bbutton_get_press_duration(mgos_bbutton_t button);
 
 int mgos_bbutton_get_press_count(mgos_bbutton_t button);
+
+bool mgos_bbutton_set_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
+bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
 
 bool mgos_bbutton_on_event(mgos_bbutton_t button, mgos_bbutton_event_handler_t on_event_cb, void* userdata);
 
