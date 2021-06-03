@@ -241,12 +241,12 @@ struct mgos_bbutton_cfg {
 ```
 bButton configuration parameters.
 
-|Field||
+|Parameter||
 |--|--|
 |click_ticks|Single click duration, in milliseconds.|
 |press_ticks|Long-press duration, in milliseconds.|
 |press_repeat_ticks|Interval, in milliseconds, for raising multiple `MGOS_EV_BBUTTON_ON_PRESS` events, subsequent to the first one.|
-|debounce_ticks|Debounce interval in milliseconds. The `0` value means no-debounce.|
+|debounce_ticks|Debounce interval in milliseconds. `0` value means no-debounce.|
 ### mgos_bbutton_set_cfg
 ```c
 bool mgos_bbutton_set_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg);
@@ -256,11 +256,11 @@ Sets bButton configuration. Returns `true` on success, or `false` otherwise.
 |Parameter||
 |--|--|
 |button|A bButton.|
-|cfg|Configuration parameters.|
+|cfg|[Configuration parameters](#mgos_bbutton_cfg).|
 
 **Remarks**
 
-You can set a parameter to `-1` for using its default value:
+You can set parameter values to `-1` for using defaults:
 
 |Parameter||
 |--|--|
@@ -277,6 +277,6 @@ Gets bButton configuration. Returns `true` on success, or `false` otherwise.
 |Parameter||
 |--|--|
 |button|A bButton.|
-|cfg|Output configuration parameters.|
+|cfg|Output [configuration parameters](#mgos_bbutton_cfg).|
 ## To Do
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).
