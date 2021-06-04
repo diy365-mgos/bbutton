@@ -163,17 +163,16 @@ enum MG_BTHING_STATE_CB_RET mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
   if (btn && state) {
     struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG(btn);
     enum MG_BTHING_STATE_CB_RET ret = cfg->overrides.getting_state_cb(btn, s_bool_state, userdata);
-    if (ret != MG_BTHING_STATE_CB_RET_ERROR) {
-      if (mgos_bvar_get_type(s_bool_state) == MGOS_BVAR_TYPE_BOOL) {
-        enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick(btn, cfg,
-          (mgos_bvar_get_bool(s_bool_state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
+    if (ret != MG_BTHING_STATE_CB_RET_SUCCESS) return ret;
+    if (mgos_bvar_get_type(s_bool_state) == MGOS_BVAR_TYPE_BOOL) {
+      enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick(btn, cfg,
+        (mgos_bvar_get_bool(s_bool_state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
 
-        return (mg_bbutton_upd_state_ex((mgos_bbutton_t)btn, state, ev, false) ? ret : MG_BTHING_STATE_CB_RET_NOTHING);
-
-      } else {
-        LOG(LL_ERROR, ("The '%s' get-state handler returned a state of type %d (%d was expected).",
-          mgos_bthing_get_id(MGOS_BBUTTON_THINGCAST(btn)), mgos_bvar_get_type(s_bool_state), MGOS_BVAR_TYPE_BOOL));
-      }
+      return (mg_bbutton_upd_state_ex((mgos_bbutton_t)btn, state, ev, false) ? ret : MG_BTHING_STATE_CB_RET_NOTHING);
+      
+    } else {
+      LOG(LL_ERROR, ("The '%s' get-state handler returned a state of type %d (%d was expected).",
+        mgos_bthing_get_id(MGOS_BBUTTON_THINGCAST(btn)), mgos_bvar_get_type(s_bool_state), MGOS_BVAR_TYPE_BOOL));
     }
   }
   return MG_BTHING_STATE_CB_RET_ERROR;
