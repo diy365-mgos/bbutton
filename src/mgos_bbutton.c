@@ -84,10 +84,8 @@ bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg) {
 static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
-  while (mgos_bthing_get_next(&things, &thing)) {
-    if (mgos_bthing_is_typeof(thing, MGOS_BBUTTON_TYPE)) {
-      mg_bsensor_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bsensor_t)thing));
-    }
+  while (mgos_bthing_typeof_get_next(&things, &thing, MGOS_BBUTTON_TYPE)) {
+    mg_bsensor_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bsensor_t)thing));
   }
   (void) arg;
 }
