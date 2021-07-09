@@ -29,10 +29,10 @@ libs:
 static int gpio_pin = 14;
 
 static void button_state_changed_cb(int ev, void *ev_data, void *userdata) {
-  mgos_bthing_t thing = MGOS_BBUTTON_THINGCAST((mgos_bbutton_t)ev_data);
+  struct mgos_bthing_state_changed_arg *arg = (struct mgos_bthing_state_changed_arg *)ev_data;
 
-  char *json = json_asprintf("%M", json_printf_bvar, mgos_bthing_get_state(thing));
-  LOG(LL_INFO, ("Button '%s' state: %s", mgos_bthing_get_id(thing), json));
+  char *json = json_asprintf("%M", json_printf_bvar, arg->state);
+  LOG(LL_INFO, ("Button '%s' state: %s", mgos_bthing_get_id(arg->thing), json));
   free(json);
 }
 
