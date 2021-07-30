@@ -188,7 +188,7 @@ static void mg_bbutton_state_changed_cb(struct mgos_bthing_state_changed_arg *ar
     enum mgos_bbutton_event ev = (mgos_bvar_get_integer(ev_state) + MGOS_EV_BBUTTON_ANY);
         
     // invoke the event handler
-    struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG((mgos_bbutton_t)btn);
+    struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG((mgos_bbutton_t)args->thing);
     if (cfg->on_event_cb) {
       cfg->on_event_cb((mgos_bbutton_t)args->thing, ev, cfg->on_event_ud);
     }
