@@ -1,7 +1,7 @@
 #include "mgos.h"
 #include "mg_bbutton_sdk.h"
 
-//TODO static mgos_bvar_t s_bool_state = NULL;
+static mgos_bvar_t s_bool_state = NULL;
 
 /*****************************************
  * Cast Functions
@@ -15,6 +15,8 @@ struct mg_bthing_sens *MG_BBUTTON_CAST1(mgos_bbutton_t thing) {
 
 bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
                              enum mgos_bbutton_event new_state, bool mark_unchanged) {
+  mgos_bvar_t key;
+
   switch(new_state) {
     case MGOS_EV_BBUTTON_ON_CLICK:
     case MGOS_EV_BBUTTON_ON_DBLCLICK:
@@ -27,7 +29,6 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
       return false;
   }
 
-  mgos_bvar_t key;
   // set MG_BUTTON_STATEKEY_EVENT key
   if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &key)) {
     mgos_bvar_set_integer(key, new_state);
@@ -51,7 +52,9 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
       mgos_bvar_new_integer(mgos_bbutton_get_press_duration(btn)));
   }
 
-  if (mark_unchanged) mgos_bvar_set_unchanged(state);
+  if (mark_unchanged) {
+    mgos_bvar_set_unchanged(state);
+  }
 
   return true;
 }
@@ -157,7 +160,7 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
   return MG_EV_BBUTTON_NOTHING; // -1
 }
 
-/* TODO enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *btn,
+enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *btn,
                                                         mgos_bvar_t state,
                                                         void *userdata) {
   if (btn && state) {
@@ -180,7 +183,7 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
     }
   }
   return MG_BTHING_STATE_RESULT_ERROR;
-} */
+}
 
 static void mg_bbutton_state_changed_cb(struct mgos_bthing_state_changed_arg *args, void *userdata) {
   mgos_bvarc_t ev_state;
@@ -213,12 +216,12 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
       /* initalize the state */
       mg_bbutton_upd_state(btn, MGOS_EV_BBUTTON_ON_IDLE, true);
       /* initalize overrides cfg */
-      cfg->overrides.getting_state_cb = NULL; //TODO mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
+      cfg->overrides.getting_state_cb = NULL; mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
       /* initalize the state-changed handler */
       mgos_bthing_on_state_changed(MGOS_BBUTTON_THINGCAST(btn), mg_bbutton_state_changed_cb, NULL);
 
       // initialize the static temporary state variable
-      //TODO if (!s_bool_state) s_bool_state = mgos_bvar_new_bool(false);
+      if (!s_bool_state) s_bool_state = mgos_bvar_new_bool(false);
 
       return true; // initialization successfully completed
     }

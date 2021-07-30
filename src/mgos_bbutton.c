@@ -81,37 +81,14 @@ bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg) {
   return true;
 }
 
-enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
-                                                      struct mg_bbutton_cfg *cfg,
-                                                      enum mg_bbutton_push_state new_push_state);
-bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
-                             enum mgos_bbutton_event new_state, bool mark_unchanged);
-                               
 static void mg_bbutton_poll_cb(void *arg) {
-  mgos_bthing_t thing;
-  mgos_bthing_enum_t things = mgos_bthing_get_all();
-  while (mgos_bthing_typeof_get_next(&things, &thing, MGOS_BBUTTON_TYPE)) {
-    mgos_bvarc_t state = mg_bthing_get_raw_state(thing);
-    if (mgos_bvar_get_type(state) == MGOS_BVAR_TYPE_BOOL) {
-      enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick((mgos_bbutton_t)thing, MG_BBUTTON_CFG((mgos_bbutton_t)thing),
-        (mgos_bvar_get_bool(state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
-
-      if (ev != MG_EV_BBUTTON_NOTHING) {
-        mg_bbutton_upd_state_ex((mgos_bbutton_t)thing, state, ev, false)
-      }
-    }
-  }
-  (void) arg;
-}
-
-/* static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
   while (mgos_bthing_typeof_get_next(&things, &thing, MGOS_BBUTTON_TYPE)) {
     mg_bthing_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bbutton_t)thing));
   }
   (void) arg;
-} */
+}
 
 bool mgos_bbutton_init() {
   if (!mgos_event_register_base(MGOS_BBUTTON_EVENT_BASE, "bButton events")) {
