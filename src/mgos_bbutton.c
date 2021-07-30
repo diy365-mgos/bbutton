@@ -93,7 +93,7 @@ static void mg_bbutton_poll_cb(void *arg) {
   while (mgos_bthing_typeof_get_next(&things, &thing, MGOS_BBUTTON_TYPE)) {
     mgos_bvarc_t state = mg_bthing_get_raw_state(thing);
     if (mgos_bvar_get_type(state) == MGOS_BVAR_TYPE_BOOL) {
-      enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick((mgos_bbutton_t)thing, MG_BBUTTON_CFG(thing),
+      enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick((mgos_bbutton_t)thing, MG_BBUTTON_CFG((mgos_bbutton_t)thing),
         (mgos_bvar_get_bool(state) ? MG_BBUTTON_PUSH_STATE_DOWN : MG_BBUTTON_PUSH_STATE_UP));
 
       if (ev != MG_EV_BBUTTON_NOTHING) {
