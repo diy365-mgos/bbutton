@@ -182,19 +182,18 @@ enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
   return MG_BTHING_STATE_RESULT_ERROR;
 }
 
-static void mg_bbutton_state_changed_cb(mgos_bthing_t btn, mgos_bvarc_t state, void *userdata) {
-  if (!btn || !state) return;
+static void mg_bbutton_state_changed_cb(struct mgos_bthing_state_changed_arg *args, void *userdata) {
   mgos_bvarc_t ev_state;
-  if (mgos_bvarc_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &ev_state)) {
+  if (mgos_bvarc_try_get_key(args->state, MG_BUTTON_STATEKEY_EVENT, &ev_state)) {
     enum mgos_bbutton_event ev = (mgos_bvar_get_integer(ev_state) + MGOS_EV_BBUTTON_ANY);
         
     // invoke the event handler
     struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG((mgos_bbutton_t)btn);
     if (cfg->on_event_cb) {
-      cfg->on_event_cb((mgos_bbutton_t)btn, ev, cfg->on_event_ud);
+      cfg->on_event_cb((mgos_bbutton_t)args->thing, ev, cfg->on_event_ud);
     }
     // trigger the event
-    mgos_event_trigger(ev, btn); 
+    mgos_event_trigger(ev, args->thing); 
   }
 }
 
