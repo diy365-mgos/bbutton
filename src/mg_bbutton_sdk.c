@@ -188,7 +188,7 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
       mg_bbutton_state_machine_reset(cfg);
       /* initalize the state */
       mgos_bvar_t state = MG_BBUTTON_CAST1(btn)->state;
-      mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer(MG_BBUTTON_PUSH_STATE_UP));
+      mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer((MGOS_EV_BBUTTON_ON_IDLE - MGOS_EV_BBUTTON_ANY)));
       mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bvar_new_integer(0));
       mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, mgos_bvar_new_integer(0));
       mgos_bvar_set_unchanged(state);
