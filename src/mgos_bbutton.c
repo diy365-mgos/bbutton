@@ -96,7 +96,7 @@ bool mgos_bbutton_init() {
   }
 
   // initialize the polling global timer
-  if (mgos_set_timer(50, MGOS_TIMER_REPEAT, mg_bbutton_poll_cb, NULL) == MGOS_INVALID_TIMER_ID) {
+  if (mgos_set_timer(10, MGOS_TIMER_REPEAT, mg_bbutton_poll_cb, NULL) == MGOS_INVALID_TIMER_ID) {
     LOG(LL_ERROR, ("Unable to start the internal polling timer for bButtons.'"));
     return false;
   }
