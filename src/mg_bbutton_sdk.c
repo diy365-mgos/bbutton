@@ -28,20 +28,20 @@ bool mg_bbutton_upd_state(mgos_bbutton_t btn, mgos_bvar_t state, enum mgos_bbutt
 
   mgos_bvar_t state_key;
   // set MG_BUTTON_STATEKEY_EVENT key
-  if mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &state_key))
-    mgos_bvar_set_integer(state_key, MG_BUTTON_STATEKEY_EVENT, new_state);
+  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &state_key))
+    mgos_bvar_set_integer(state_key, new_state);
   else
     mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer(new_state));
 
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
-  if mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, &state_key))
-    mgos_bvar_set_integer(state_key, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bbutton_get_press_count(btn));
+  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, &state_key))
+    mgos_bvar_set_integer(state_key, mgos_bbutton_get_press_count(btn));
   else
     mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bvar_new_integer(mgos_bbutton_get_press_count(btn)));
 
   // set MG_BUTTON_STATEKEY_PRESS_DURATION
-  if mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, &state_key))
-    mgos_bvar_set_integer(state_key, MG_BUTTON_STATEKEY_PRESS_DURATION, mgos_bbutton_get_press_duration(btn));
+  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, &state_key))
+    mgos_bvar_set_integer(state_key, mgos_bbutton_get_press_duration(btn));
   else
     mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, mgos_bvar_new_integer(mgos_bbutton_get_press_duration(btn)));
 
