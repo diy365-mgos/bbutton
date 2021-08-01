@@ -13,10 +13,7 @@ struct mg_bthing_sens *MG_BBUTTON_CAST1(mgos_bbutton_t thing) {
 }
 /*****************************************/
 
-bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
-                             enum mgos_bbutton_event new_state, bool mark_unchanged) {
-  mgos_bvar_t key;
-
+bool mg_bbutton_upd_state(mgos_bbutton_t btn, mgos_bvar_t state, enum mgos_bbutton_event new_state) {
   switch(new_state) {
     case MGOS_EV_BBUTTON_ON_CLICK:
     case MGOS_EV_BBUTTON_ON_DBLCLICK:
@@ -30,37 +27,13 @@ bool mg_bbutton_upd_state_ex(mgos_bbutton_t btn, mgos_bvar_t state,
   }
 
   // set MG_BUTTON_STATEKEY_EVENT key
-  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_EVENT, &key)) {
-    mgos_bvar_set_integer(key, new_state);
-  } else {
-    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer(new_state));
-  }
-
+  mgos_bvar_set_integer(mgos_bvar_get_key(state, MG_BUTTON_STATEKEY_EVENT), new_state);
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
-  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, &key)) {
-    mgos_bvar_set_integer(key, mgos_bbutton_get_press_count(btn));
-  } else {
-    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT,
-      mgos_bvar_new_integer(mgos_bbutton_get_press_count(btn)));
-  }
-
+  mgos_bvar_set_integer(mgos_bvar_get_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT), mgos_bbutton_get_press_count(btn));
   // set MG_BUTTON_STATEKEY_PRESS_DURATION
-  if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, &key)) {
-    mgos_bvar_set_integer(key, mgos_bbutton_get_press_duration(btn));
-  } else {
-    mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION,
-      mgos_bvar_new_integer(mgos_bbutton_get_press_duration(btn)));
-  }
-
-  if (mark_unchanged) {
-    mgos_bvar_set_unchanged(state);
-  }
+  mgos_bvar_set_integer(mgos_bvar_get_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION), mgos_bbutton_get_press_duration(btn));
 
   return true;
-}
-
-bool mg_bbutton_upd_state(mgos_bbutton_t btn, enum mgos_bbutton_event new_state, bool mark_unchanged) {
-  return mg_bbutton_upd_state_ex(btn, MG_BBUTTON_CAST1(btn)->state, new_state, mark_unchanged);
 }
 
 void mg_bbutton_state_machine_reset(struct mg_bbutton_cfg *cfg) {
@@ -173,7 +146,7 @@ enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
       
       if (ev == MG_EV_BBUTTON_NOTHING) {
         return MG_BTHING_STATE_RESULT_UNHANDLED;
-      } else if (mg_bbutton_upd_state_ex((mgos_bbutton_t)btn, state, ev, false)) {
+      } else if (mg_bbutton_upd_state((mgos_bbutton_t)btn, state, ev)) {
         return MG_BTHING_STATE_RESULT_SUCCESS;
       }
 
@@ -214,9 +187,13 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
       /* initalize state-machine */
       mg_bbutton_state_machine_reset(cfg);
       /* initalize the state */
-      mg_bbutton_upd_state(btn, MGOS_EV_BBUTTON_ON_IDLE, true);
+      mgos_bvar_t state = MG_BBUTTON_CAST1(btn)->state;
+      mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_null());
+      mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bvar_new_null());
+      mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_PRESS_DURATION, mgos_bvar_new_null());
+      mgos_bvar_set_unchanged(state);
       /* initalize overrides cfg */
-      cfg->overrides.getting_state_cb = NULL; mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
+      cfg->overrides.getting_state_cb = mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
       /* initalize the state-changed handler */
       mgos_bthing_on_state_changed(MGOS_BBUTTON_THINGCAST(btn), mg_bbutton_state_changed_cb, NULL);
 
@@ -249,7 +226,9 @@ void mg_bbutton_reset(mgos_bbutton_t btn) {
   /* clear state-machine */
   mg_bbutton_state_machine_reset(cfg);
   /* clear the state */
-  mg_bbutton_upd_state(btn, MGOS_EV_BBUTTON_ON_IDLE, true);
+  mgos_bvar_t state = MG_BBUTTON_CAST1(btn)->state;
+  mgos_bvar_clear(state);
+  mgos_bvar_set_unchanged(state);
 
   // reset sensor-base obj
   mg_bsensor_reset(btn);
