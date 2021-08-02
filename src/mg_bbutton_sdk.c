@@ -32,7 +32,6 @@ bool mg_bbutton_upd_state(mgos_bbutton_t btn, mgos_bvar_t state, enum mgos_bbutt
     mgos_bvar_set_integer(state_key, new_state);
   else
     mgos_bvar_add_key(state, MG_BUTTON_STATEKEY_EVENT, mgos_bvar_new_integer(new_state));
-  LOG(LL_INFO, ("UPDATED(%p) '%s' to %d", state, MG_BUTTON_STATEKEY_EVENT, new_state));
 
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
   if (mgos_bvar_try_get_key(state, MG_BUTTON_STATEKEY_PRESS_COUNT, &state_key))
