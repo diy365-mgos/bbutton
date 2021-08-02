@@ -23,7 +23,7 @@ libs:
 #include "mgos_bthing_gpio.h"
 #include "mgos_bbutton.h"
 
-static int gpio_pin = 14;
+static int gpio_pin = 0;
 
 static void button_state_changed_cb(int ev, void *ev_data, void *userdata) {
   struct mgos_bthing_state_changed_arg *arg = (struct mgos_bthing_state_changed_arg *)ev_data;
