@@ -4,19 +4,16 @@ A bButton allows you to easily manage button's events like click, double-click a
 ## Features
 - **GPIO as buttons** - You can easily manage buttons attached to input GPIOs. Just include the [bThings GPIO library](https://github.com/diy365-mgos/bthing-gpio) in your project.
 ## Get Started in C/C++
-Include the library in your `mos.yml` file.
-```yaml
-libs:
-  - origin: https://github.com/diy365-mgos/bbutton
-```
+Copy, build and flash one of the following ready-to-use firmwares.
 #### Example 1 - Dash button
 Create a dash button. Before running the code sample, you must wire your boardas indicated in the schema below.
 
-![Example 1 - schema](docs/example_1_schema.png)
+![Example 1 - schema](docs/example_1_schema_v1.png)
 
-In addition, include this library in your `mos.yml` file.
+Include these libraries in your `mos.yml` file.
 ```yaml
 libs:
+  - origin: https://github.com/diy365-mgos/bbutton
   - origin: https://github.com/diy365-mgos/bvar-json
   - origin: https://github.com/diy365-mgos/bthing-gpio
 ```
