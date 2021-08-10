@@ -26,7 +26,7 @@ libs:
 static int gpio_pin = 0;
 
 static void button_state_changed_cb(int ev, void *ev_data, void *userdata) {
-  struct mgos_bthing_state_changed_arg *arg = (struct mgos_bthing_state_changed_arg *)ev_data;
+  struct mgos_bthing_state *arg = (struct mgos_bthing_state *)ev_data;
 
   char *json = json_asprintf("%M", json_printf_bvar, arg->state);
   LOG(LL_INFO, ("Button '%s' state: %s", mgos_bthing_get_id(arg->thing), json));
