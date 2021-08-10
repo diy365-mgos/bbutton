@@ -85,7 +85,7 @@ static void mg_bbutton_poll_cb(void *arg) {
   mgos_bthing_t thing;
   mgos_bthing_enum_t things = mgos_bthing_get_all();
   while (mgos_bthing_typeof_get_next(&things, &thing, MGOS_BBUTTON_TYPE)) {
-    mg_bthing_update_state(MGOS_BBUTTON_DOWNCAST((mgos_bbutton_t)thing));
+    mgos_bthing_update_state(thing);
   }
   (void) arg;
 }
