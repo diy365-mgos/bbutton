@@ -177,8 +177,10 @@ enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
   return MG_BTHING_STATE_RESULT_ERROR;
 }
 
-static void mg_bbutton_state_changed_cb(struct mgos_bthing_state *args, void *userdata) {
+static void mg_bbutton_state_changed_cb(int ev, void *ev_data, void *userdata) {
   mgos_bvarc_t ev_state;
+  struct mgos_bthing_state *args = (struct mgos_bthing_state *)ev_data;
+  
   if (mgos_bvarc_try_get_key(args->state, MG_BUTTON_STATEKEY_EVENT, &ev_state)) {
     enum mgos_bbutton_event ev = (mgos_bvar_get_integer(ev_state) + MGOS_EV_BBUTTON_ANY);
         
@@ -190,6 +192,8 @@ static void mg_bbutton_state_changed_cb(struct mgos_bthing_state *args, void *us
     // trigger the event
     mgos_event_trigger(ev, args->thing); 
   }
+  (void) ev;
+  (void) userdata;
 }
 
 bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
@@ -208,7 +212,7 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
       /* initalize overrides cfg */
       cfg->overrides.getting_state_cb = mg_bthing_on_getting_state(btn, mg_bbutton_getting_state_cb);
       /* initalize the state-changed handler */
-      mgos_bthing_on_state_changed(MGOS_BBUTTON_THINGCAST(btn), mg_bbutton_state_changed_cb, NULL);
+      mgos_bthing_on_event(MGOS_BBUTTON_THINGCAST(btn), MGOS_EV_BTHING_STATE_CHANGED, mg_bbutton_state_changed_cb, NULL);
 
       // initialize the static temporary state variable
       if (!s_bool_state) s_bool_state = mgos_bvar_new_bool(false);
