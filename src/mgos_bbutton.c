@@ -82,7 +82,7 @@ bool mgos_bbutton_get_cfg(mgos_bbutton_t button, struct mgos_bbutton_cfg *cfg) {
 }
 
 static void mg_bbutton_poll_cb(void *arg) {
-  mgos_bthing_update_states(MGOS_BBUTTON_TYPE);
+  mg_bthing_update_states(MGOS_BBUTTON_TYPE, false);
   (void) arg;
 }
 
