@@ -29,13 +29,13 @@ static void button_state_changed_cb(int ev, void *ev_data, void *userdata) {
   struct mgos_bthing_state *arg = (struct mgos_bthing_state *)ev_data;
 
   char *json = json_asprintf("%M", json_printf_bvar, arg->state);
-  LOG(LL_INFO, ("Button '%s' state: %s", mgos_bthing_get_id(arg->thing), json));
+  LOG(LL_INFO, ("Button '%s' state: %s", mgos_bthing_get_uid(arg->thing), json));
   free(json);
 }
 
 static void button_on_event_cb(mgos_bbutton_t btn, enum mgos_bbutton_event ev, void *userdata) {
   mgos_bthing_t thing = MGOS_BBUTTON_THINGCAST(btn);
-  const char *id = mgos_bthing_get_id(thing);
+  const char *id = mgos_bthing_get_uid(thing);
 
   switch (ev) {
     case MGOS_EV_BBUTTON_ON_CLICK:
@@ -151,7 +151,7 @@ Casts a bButton to a generic bThing to be used with [inherited bThing APIs](http
 Example:
 ```c
 mgos_bbutton_t btn = mgos_bbutton_create(...);
-LOG(LL_INFO, ("%s successfully created.", mgos_bthing_get_id(MGOS_BBUTTON_THINGCAST(btn)));
+LOG(LL_INFO, ("%s successfully created.", mgos_bthing_get_uid(MGOS_BBUTTON_THINGCAST(btn)));
 ```
 ### MGOS_BBUTTON_DOWNCAST
 ```c

@@ -59,7 +59,7 @@ bool mgos_bbutton_on_event(mgos_bbutton_t button, mgos_bbutton_event_handler_t o
       return true;
     }
     LOG(LL_ERROR, ("The event handler of bButton '%s' is already configured.",
-      mgos_bthing_get_id(MGOS_BBUTTON_THINGCAST(button))));
+      mgos_bthing_get_uid(MGOS_BBUTTON_THINGCAST(button))));
   }
   return false;
 }

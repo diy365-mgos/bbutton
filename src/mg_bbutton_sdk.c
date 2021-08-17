@@ -171,7 +171,7 @@ enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *b
 
     } else {
       LOG(LL_ERROR, ("The '%s' get-state handler returned a state of type %d (%d was expected).",
-        mgos_bthing_get_id(MGOS_BBUTTON_THINGCAST(btn)), mgos_bvar_get_type(s_bool_state), MGOS_BVAR_TYPE_BOOL));
+        mgos_bthing_get_uid(MGOS_BBUTTON_THINGCAST(btn)), mgos_bvar_get_type(s_bool_state), MGOS_BVAR_TYPE_BOOL));
     }
   }
   return MG_BTHING_STATE_RESULT_ERROR;
@@ -225,7 +225,7 @@ bool mg_bbutton_init(mgos_bbutton_t btn, struct mg_bbutton_cfg *cfg) {
   }
 
   LOG(LL_ERROR, ("Error initializing bButton '%s'. See above error message for more details.",
-    mgos_bthing_get_id(MGOS_BBUTTON_THINGCAST(btn))));
+    mgos_bthing_get_uid(MGOS_BBUTTON_THINGCAST(btn))));
   return false; 
 }
 
