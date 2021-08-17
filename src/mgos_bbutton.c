@@ -15,9 +15,9 @@ mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t sensor) {
   return (mgos_bsensor_t)sensor;
 }
 
-mgos_bbutton_t mgos_bbutton_create(const char *id) {
+mgos_bbutton_t mgos_bbutton_create(const char *id, const char *domain) {
   mgos_bbutton_t MG_BBUTTON_NEW(btn);
-  if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE)) {
+  if (mg_bthing_init(MG_BTHING_SENS_CAST3(btn), id, MGOS_BBUTTON_TYPE, domain)) {
     struct mg_bbutton_cfg *cfg = calloc(1, sizeof(struct mg_bbutton_cfg));
     if (cfg) {
       if (mg_bbutton_init(btn, cfg) &&

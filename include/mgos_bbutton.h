@@ -67,7 +67,7 @@ mgos_bsensor_t MGOS_BBUTTON_DOWNCAST(mgos_bbutton_t button);
 
 typedef void (*mgos_bbutton_event_handler_t)(mgos_bbutton_t button, enum mgos_bbutton_event ev, void *userdata);
 
-mgos_bbutton_t mgos_bbutton_create(const char *id);
+mgos_bbutton_t mgos_bbutton_create(const char *id, const char *domain);
 
 bool mgos_bbutton_is_pressed(mgos_bbutton_t button);
 

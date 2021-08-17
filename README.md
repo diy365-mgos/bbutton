@@ -62,7 +62,7 @@ enum mgos_app_init_result mgos_app_init(void) {
   mgos_event_add_handler(MGOS_EV_BTHING_STATE_CHANGED, button_state_changed_cb, NULL);
 
   /* create the sensor */
-  mgos_bbutton_t btn = mgos_bbutton_create("btn1");
+  mgos_bbutton_t btn = mgos_bbutton_create("btn1", NULL);
   /* attach GPIO  */
   mgos_bthing_gpio_attach(MGOS_BBUTTON_THINGCAST(btn), gpio_pin, false, MGOS_BTHING_GPIO_PULL_AUTO);
   /* set the event handler callback */
@@ -164,13 +164,14 @@ Casts a bButton to a bSensor to be used with [inherited bSensor APIs](https://gi
 |button|A bButton.|
 ### mgos_bbutton_create
 ```c
-mgos_bbutton_t mgos_bbutton_create(const char *id);
+mgos_bbutton_t mgos_bbutton_create(const char *id, const char *domain);
 ```
 Creates a bButton. Returns `NULL` on error.
 
 |Parameter||
 |--|--|
 |id|The bButton ID.|
+|domain|The domain name or `NULL`.|
 ### mgos_bbutton_is_pressed
 ```c
 bool mgos_bbutton_is_pressed(mgos_bbutton_t button);
