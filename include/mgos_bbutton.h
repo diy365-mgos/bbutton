@@ -28,10 +28,6 @@
 extern "C" {
 #endif
 
-// [  ACTUATORS ]-[     SENSORS ]-[ SYS]
-// [][][][][][][]-[][][][][1][][]-[0][0]
-#define MGOS_BBUTTON_TYPE 16
-
 #define MGOS_BBUTTON_DEFAULT_CLICK_TICKS 600 //milliseconds
 #define MGOS_BBUTTON_DEFAULT_PRESS_TICKS 1000 //1 second
 #define MGOS_BBUTTON_DEFAULT_DEBOUNCE_TICKS 50 //milliseconds
