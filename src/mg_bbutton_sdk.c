@@ -136,12 +136,12 @@ static enum mgos_bbutton_event mg_bbutton_state_machine_tick(mgos_bbutton_t btn,
   return MG_EV_BBUTTON_NOTHING; // -1
 }
 
-enum MG_BTHING_STATE_RESULT mg_bbutton_getting_state_cb(struct mg_bthing_sens *btn,
+enum mg_bthing_state_result mg_bbutton_getting_state_cb(struct mg_bthing_sens *btn,
                                                         mgos_bvar_t state,
                                                         void *userdata) {
   if (btn && state) {
     struct mg_bbutton_cfg *cfg = MG_BBUTTON_CFG(btn);
-    enum MG_BTHING_STATE_RESULT ret = cfg->overrides.getting_state_cb(btn, s_bool_state, userdata);
+    enum mg_bthing_state_result ret = cfg->overrides.getting_state_cb(btn, s_bool_state, userdata);
     if (ret != MG_BTHING_STATE_RESULT_SUCCESS) return ret;
     if (mgos_bvar_get_type(s_bool_state) == MGOS_BVAR_TYPE_BOOL) {
       enum mgos_bbutton_event ev = mg_bbutton_state_machine_tick(btn, cfg,
