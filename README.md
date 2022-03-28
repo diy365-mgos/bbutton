@@ -94,12 +94,19 @@ The [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mgos_bthing_
 |event|integer|The last [event](https://github.com/diy365-mgos/bbutton#mgos_bbutton_event) occurred: 1(`MGOS_EV_BBUTTON_ON_IDLE`), 2(`MGOS_EV_BBUTTON_ON_CLICK`), 3(`MGOS_EV_BBUTTON_ON_DBLCLICK`), 4(`MGOS_EV_BBUTTON_ON_PRESS`) or 5(`MGOS_EV_BBUTTON_ON_RELEASE`).|
 |pressCount|integer|The press (long-press) counter or `0` in case the button was just clicked or double-clicked. The same returned by `mgos_bbutton_get_press_count()`.|
 |pressDuration|integer|The press (long-press) duration in milliseconds, or `0` in case the button was just clicked or double-clicked. The same returned by `mgos_bbutton_get_press_duration()`.|
+```c
+mgos_bbutton_t btn = mgos_bbutton_create(...);
+mgos_bvarc_t state = mgos_bthing_get_state(MGOS_BBUTTON_THINGCAST(btn));
+int event = mgos_bvar_get_integer(mgos_bvarc_get_key(state, "event"));
+int press_count = mgos_bvar_get_integer(mgos_bvarc_get_key(state, "pressCount"));
+int press_duration = mgos_bvar_get_integer(mgos_bvarc_get_key(state, "pressDuration"));
+```
 ## C/C++ APIs Reference
 ### MGOS_BBUTTON_TYPE
 ```c
-#define MGOS_BBUTTON_TYPE 16
+#define MGOS_BBUTTON_TYPE
 ```
-The bButton type ID returned by [mgos_bthing_get_type()](https://github.com/diy365-mgos/bthing#mgos_bthing_get_type). It can be used with [mgos_bthing_is_typeof()](https://github.com/diy365-mgos/bthing#mgos_bthing_is_typeof).
+The bButton type ID. It can be used with [mgos_bthing_is_typeof()](https://github.com/diy365-mgos/bthing#mgos_bthing_is_typeof).
 
 Example:
 ```c
