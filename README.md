@@ -71,30 +71,30 @@ enum mgos_app_init_result mgos_app_init(void) {
   return MGOS_APP_INIT_SUCCESS;
 }
 ```
-## C/C++ APIs Reference
-### Inherited APIs
+## Inherited APIs
 A bButton inherits APIs from:
 - [bThing](https://github.com/diy365-mgos/bthing)
 - [bSensor](https://github.com/diy365-mgos/bsensor)
-#### Remarks on (*mgos_bthing_get_state_handler_t)
-The [*get-state* handler](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state_handler_t) of a bButton must return a boolean [bVariant](https://github.com/diy365-mgos/bvar): `true` if the physical button is pressed, or `false` otherwise.
-
-Example
+#### Remarks on: mgos_bthing_on_get_state()
+The [get-state handler](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state_handler_t) must set the `state` parameter `true` if the physical button is pressed, or `false` otherwise.
 ```c
-static bool btn_get_state_handler(mgos_bthing_t thing, mgos_bvar_t state, void *userdata) {
+static bool my_get_state_handler(mgos_bthing_t thing, mgos_bvar_t state, void *userdata) {
   bool is_pressed;
   // ... check if the physical button is pressed
   mgos_bvar_set_bool(state, is_pressed);
   return true;
 }
+mgos_bbutton_t btn = mgos_bbutton_create(...);
+mgos_bthing_on_get_state(MGOS_BBUTTON_THINGCAST(btn), my_get_state_handler, NULL);
 ```
-#### Remarks on mgos_bthing_get_state
-The inherited [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state) returns a [bVariantDictionary](https://github.com/diy365-mgos/bvar-dic) having following keys:
+### Remarks on: mgos_bthing_get_state()
+The [mgos_bthing_get_state()](https://github.com/diy365-mgos/bthing#mgos_bthing_get_state) returns a [bVariantDictionary](https://github.com/diy365-mgos/bvar-dic) having following keys:
 |Key|Type||
 |--|--|--|
 |event|integer|The last [event](https://github.com/diy365-mgos/bbutton#mgos_bbutton_event) occurred: 1(`MGOS_EV_BBUTTON_ON_IDLE`), 2(`MGOS_EV_BBUTTON_ON_CLICK`), 3(`MGOS_EV_BBUTTON_ON_DBLCLICK`), 4(`MGOS_EV_BBUTTON_ON_PRESS`) or 5(`MGOS_EV_BBUTTON_ON_RELEASE`).|
 |pressCount|integer|The press (long-press) counter or `0` in case the button was just clicked or double-clicked. The same returned by `mgos_bbutton_get_press_count()`.|
 |pressDuration|integer|The press (long-press) duration in milliseconds, or `0` in case the button was just clicked or double-clicked. The same returned by `mgos_bbutton_get_press_duration()`.|
+## C/C++ APIs Reference
 ### MGOS_BBUTTON_TYPE
 ```c
 #define MGOS_BBUTTON_TYPE 16
