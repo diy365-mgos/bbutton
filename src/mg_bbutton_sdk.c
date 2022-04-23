@@ -31,7 +31,7 @@ bool mg_bbutton_upd_state(mgos_bbutton_t btn, mgos_bvar_t state, enum mgos_bbutt
   mgos_bvar_set_key_integer(state, MG_BUTTON_STATEKEY_EVENT, new_state);
 
   // set MG_BUTTON_STATEKEY_PRESS_COUNT key
-  mgos_bvar_set_key_integer(state, state, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bbutton_get_press_count(btn));
+  mgos_bvar_set_key_integer(state, MG_BUTTON_STATEKEY_PRESS_COUNT, mgos_bbutton_get_press_count(btn));
 
   // set MG_BUTTON_STATEKEY_PRESS_DURATION
   mgos_bvar_set_key_integer(state, MG_BUTTON_STATEKEY_PRESS_DURATION, mgos_bbutton_get_press_duration(btn));
