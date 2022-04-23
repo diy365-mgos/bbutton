@@ -26,7 +26,6 @@ bool mg_bbutton_upd_state(mgos_bbutton_t btn, mgos_bvar_t state, enum mgos_bbutt
       return false;
   }
 
-  mgos_bvar_t state_key;
   // set MG_BUTTON_STATEKEY_EVENT key
   mgos_bvar_set_key_integer(state, MG_BUTTON_STATEKEY_EVENT, new_state);
 
